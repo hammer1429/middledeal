@@ -1,9 +1,10 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { connection } from "next/server";
-import { getNotices } from "@/lib/Notices";
-import { getProducts } from "@/lib/products";
+import { Suspense } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { connection } from "next/server"
+import { getNotices } from "@/lib/Notices"
+import { getProducts } from "@/lib/products"
+import { DeleteProductButton } from "@/components/DeleteProductButton"
 
 export default function Home() {
   return (
@@ -144,19 +145,19 @@ export default function Home() {
         </Suspense>
       </section>
     </main>
-  );
+  )
 }
 
 async function HomeProducts() {
-  await connection();
-  const products = (await getProducts()).slice(0, 3);
+  await connection()
+  const products = (await getProducts()).slice(0, 3)
 
   if (products.length === 0) {
     return (
       <div className="rounded-2xl border border-orange-100 bg-white/80 px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
         등록된 상품이 없습니다.
       </div>
-    );
+    )
   }
 
   return (
@@ -196,7 +197,7 @@ async function HomeProducts() {
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
 function HomeProductsLoading() {
@@ -212,19 +213,19 @@ function HomeProductsLoading() {
         />
       ))}
     </div>
-  );
+  )
 }
 
 async function HomeNotices() {
-  await connection();
-  const notices = (await getNotices()).slice(0, 3);
+  await connection()
+  const notices = (await getNotices()).slice(0, 3)
 
   if (notices.length === 0) {
     return (
       <div className="rounded-2xl border border-orange-100 bg-white/80 px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
         등록된 공지사항이 없습니다.
       </div>
-    );
+    )
   }
 
   return (
@@ -245,7 +246,7 @@ async function HomeNotices() {
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
 function HomeNoticesLoading() {
@@ -261,5 +262,5 @@ function HomeNoticesLoading() {
         />
       ))}
     </div>
-  );
+  )
 }

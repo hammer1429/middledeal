@@ -1,11 +1,12 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { connection } from "next/server";
-import { getProducts } from "@/lib/products";
+import { Suspense } from "react"
+import { notFound } from "next/navigation"
+import Link from "next/link"
+import Image from "next/image"
+import { connection } from "next/server"
+import { getProducts } from "@/lib/products"
+import { DeleteProductButton } from "@/components/DeleteProductButton"
 
-type Props = { params: Promise<{ id: string }> };
+type Props = { params: Promise<{ id: string }> }
 
 export default function ProductDetailPage({ params }: Props) {
   return (
@@ -14,18 +15,18 @@ export default function ProductDetailPage({ params }: Props) {
         <ProductDetail params={params} />
       </Suspense>
     </main>
-  );
+  )
 }
 
 async function ProductDetail({ params }: Props) {
-  const { id } = await params;
-  await connection();
+  const { id } = await params
+  await connection()
   const product = await getProducts().then((products) =>
     products.find((p) => p.id === id),
-  );
+  )
 
   if (!product) {
-    notFound();
+    notFound()
   }
 
   return (
@@ -55,8 +56,19 @@ async function ProductDetail({ params }: Props) {
       <p className="whitespace-pre-wrap py-8 leading-8 text-slate-700">
         {product.content}
       </p>
+
+      <div className="mt-8 flex flex-wrap gap-3 border-t border-orange-100 pt-6">
+        <Link
+          href={`/products/${product.id}/edit`}
+          className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          상품 수정
+        </Link>
+
+        <DeleteProductButton productId={product.id} />
+      </div>
     </article>
-  );
+  )
 }
 
 function ProductLoading() {
@@ -65,5 +77,5 @@ function ProductLoading() {
       aria-label="상품 정보를 불러오는 중"
       className="mx-auto h-72 max-w-3xl animate-pulse rounded-3xl border border-orange-100 bg-white"
     />
-  );
+  )
 }
