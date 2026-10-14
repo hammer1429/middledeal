@@ -1,17 +1,22 @@
+import { Suspense } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { connection } from "next/server";
+import { getNotices } from "@/lib/Notices";
+import { getProducts } from "@/lib/products";
 
 export default function Home() {
   return (
-    <main className="relative flex flex-1 items-center overflow-hidden bg-linear-to-br from-[#fffaf0] via-white to-[#ffeadb] px-6 py-16 sm:px-10 lg:py-20">
+    <main className="relative flex flex-1 flex-col overflow-hidden bg-linear-to-br from-[#fffaf0] via-white to-[#ffeadb] px-6 py-12 sm:px-10 lg:py-16">
       <div
         aria-hidden="true"
-        className="absolute -left-40 top-1/4 size-96 rounded-full bg-amber-200/40 blur-3xl"
+        className="pointer-events-none absolute -left-40 top-1/4 size-96 rounded-full bg-amber-200/40 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="absolute -bottom-48 right-0 size-128 rounded-full bg-orange-300/30 blur-3xl"
+        className="pointer-events-none absolute -bottom-48 right-0 size-128 rounded-full bg-orange-300/30 blur-3xl"
       />
-      <section className="relative mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
+      <section className="relative mx-auto grid min-h-[36rem] w-full max-w-6xl items-center gap-14 py-8 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
         <div className="relative z-10 text-center lg:text-left">
           <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-200/80 bg-white/70 px-4 py-2 text-xs font-bold tracking-[0.18em] text-orange-700 shadow-sm sm:text-sm">
             <span className="size-2 rounded-full bg-orange-500 shadow-[0_0_12px_2px_rgba(249,115,22,0.5)]" />
@@ -30,10 +35,10 @@ export default function Home() {
             당신의 다음 발견을 시작해보세요.
           </p>
           <Link
-            href="/products"
+            href="/login"
             className="group mt-9 inline-flex items-center gap-4 rounded-full bg-slate-950 py-4 pl-7 pr-5 font-semibold text-white shadow-xl shadow-slate-950/20 transition duration-200 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-600/25 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-600"
           >
-            상품 페이지로 이동
+            로그인 페이지로 이동
             <span className="flex size-9 items-center justify-center rounded-full bg-white/15 text-lg transition-transform group-hover:translate-x-1">
               →
             </span>
@@ -82,6 +87,179 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <section
+        aria-labelledby="home-notices-heading"
+        className="relative mx-auto w-full max-w-6xl border-t border-orange-200/70 py-12 sm:py-16"
+      >
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <p className="mb-2 text-xs font-bold tracking-[0.18em] text-orange-600 sm:text-sm">
+              WHAT&apos;S NEW
+            </p>
+            <h2
+              id="home-notices-heading"
+              className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl"
+            >
+              공지사항
+            </h2>
+          </div>
+          <Link
+            href="/notice"
+            className="shrink-0 text-sm font-semibold text-orange-700 transition-colors hover:text-orange-800"
+          >
+            전체 보기 <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <Suspense fallback={<HomeNoticesLoading />}>
+          <HomeNotices />
+        </Suspense>
+      </section>
+
+      <section
+        aria-labelledby="home-products-heading"
+        className="relative mx-auto w-full max-w-6xl border-t border-orange-200/70 py-12 sm:py-16"
+      >
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <p className="mb-2 text-xs font-bold tracking-[0.18em] text-orange-600 sm:text-sm">
+              JUST LISTED
+            </p>
+            <h2
+              id="home-products-heading"
+              className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl"
+            >
+              새로 등록된 상품
+            </h2>
+          </div>
+          <Link
+            href="/products"
+            className="shrink-0 text-sm font-semibold text-orange-700 transition-colors hover:text-orange-800"
+          >
+            전체 보기 <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <Suspense fallback={<HomeProductsLoading />}>
+          <HomeProducts />
+        </Suspense>
+      </section>
     </main>
+  );
+}
+
+async function HomeProducts() {
+  await connection();
+  const products = (await getProducts()).slice(0, 3);
+
+  if (products.length === 0) {
+    return (
+      <div className="rounded-2xl border border-orange-100 bg-white/80 px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
+        등록된 상품이 없습니다.
+      </div>
+    );
+  }
+
+  return (
+    <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+      {products.map((product) => (
+        <li key={product.id}>
+          <Link
+            href={`/products/${product.id}`}
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-orange-100 bg-white/85 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md"
+          >
+            {product.imageUrl ? (
+              <Image
+                src={product.imageUrl}
+                alt=""
+                width={640}
+                height={420}
+                unoptimized
+                className="h-48 w-full object-cover"
+              />
+            ) : (
+              <div
+                aria-hidden="true"
+                className="flex h-48 items-center justify-center bg-linear-to-br from-amber-100 via-orange-100 to-rose-100 text-4xl text-orange-400"
+              >
+                ✳
+              </div>
+            )}
+            <div className="flex flex-1 flex-col justify-between gap-4 p-5">
+              <p className="line-clamp-2 font-semibold text-slate-900 transition-colors group-hover:text-orange-700">
+                {product.title}
+              </p>
+              <p className="text-sm text-slate-500">
+                {product.author} · {product.createdAt}
+              </p>
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function HomeProductsLoading() {
+  return (
+    <div
+      aria-label="상품을 불러오는 중"
+      className="grid gap-3 sm:grid-cols-2 md:grid-cols-3"
+    >
+      {[0, 1, 2].map((item) => (
+        <div
+          key={item}
+          className="h-72 animate-pulse rounded-2xl border border-orange-100 bg-white/85"
+        />
+      ))}
+    </div>
+  );
+}
+
+async function HomeNotices() {
+  await connection();
+  const notices = (await getNotices()).slice(0, 3);
+
+  if (notices.length === 0) {
+    return (
+      <div className="rounded-2xl border border-orange-100 bg-white/80 px-5 py-8 text-center text-sm text-slate-500 shadow-sm">
+        등록된 공지사항이 없습니다.
+      </div>
+    );
+  }
+
+  return (
+    <ul className="grid gap-3 md:grid-cols-3">
+      {notices.map((notice) => (
+        <li key={notice.id}>
+          <Link
+            href={`/notice/${notice.id}`}
+            className="group flex h-full flex-col justify-between gap-5 rounded-2xl border border-orange-100 bg-white/85 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md"
+          >
+            <p className="line-clamp-2 font-semibold text-slate-900 transition-colors group-hover:text-orange-700">
+              {notice.title}
+            </p>
+            <p className="text-sm text-slate-500">
+              {notice.author} · {notice.createdAt}
+            </p>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function HomeNoticesLoading() {
+  return (
+    <div
+      aria-label="공지사항을 불러오는 중"
+      className="grid gap-3 md:grid-cols-3"
+    >
+      {[0, 1, 2].map((item) => (
+        <div
+          key={item}
+          className="h-28 animate-pulse rounded-2xl border border-orange-100 bg-white/85"
+        />
+      ))}
+    </div>
   );
 }

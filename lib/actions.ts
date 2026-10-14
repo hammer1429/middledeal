@@ -6,6 +6,7 @@ import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createProduct } from "@/lib/products";
+import { createNotice } from "@/lib/Notices";
 
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
@@ -103,4 +104,21 @@ export async function createProductAction(formData: FormData) {
   });
   revalidatePath("/products");
   redirect(`/products/${product.id}`);
+}
+
+export async function createNoticeAction(formData: FormData) {
+  const title = String(formData.get("title") ?? "").trim();
+  const author = String(formData.get("author") ?? "").trim();
+  const content = String(formData.get("content") ?? "").trim();
+
+  if (!title || !author || !content) {
+    // 실습 단계의 아주 단순한 검증입니다.
+    // 실제 서비스라면 에러 상태를 돌려주고 폼에 메시지를 보여줘야 합니다.
+    throw new Error("제목, 작성자, 내용을 모두 입력해주세요.");
+  }
+
+  const notice = await createNotice({ title, author, content });
+  revalidatePath("/notice");
+  revalidatePath("/");
+  redirect(`/notice/${notice.id}`);
 }

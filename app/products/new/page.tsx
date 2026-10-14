@@ -11,7 +11,6 @@ export default function NewProductPage() {
         </h1>
         <form
           action={createProductAction}
-          encType="multipart/form-data"
           className="flex flex-col gap-5 rounded-3xl border border-orange-100 bg-white p-6 shadow-sm sm:p-8"
         >
           <div className="flex flex-col gap-2">
