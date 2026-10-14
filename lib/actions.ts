@@ -187,7 +187,7 @@ export async function updateProductAction(id: string, formData: FormData) {
   redirect(`/products/${id}`)
 }
 
-export async function deleteProductAction(id: string, _formData: FormData) {
+export async function deleteProductAction(id: string) {
   const deleted = await deleteProduct(id)
 
   if (!deleted) {
