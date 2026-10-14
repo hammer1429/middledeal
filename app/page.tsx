@@ -1,69 +1,87 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="relative flex flex-1 items-center overflow-hidden bg-linear-to-br from-[#fffaf0] via-white to-[#ffeadb] px-6 py-16 sm:px-10 lg:py-20">
+      <div
+        aria-hidden="true"
+        className="absolute -left-40 top-1/4 size-96 rounded-full bg-amber-200/40 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-48 right-0 size-128 rounded-full bg-orange-300/30 blur-3xl"
+      />
+      <section className="relative mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
+        <div className="relative z-10 text-center lg:text-left">
+          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-200/80 bg-white/70 px-4 py-2 text-xs font-bold tracking-[0.18em] text-orange-700 shadow-sm sm:text-sm">
+            <span className="size-2 rounded-full bg-orange-500 shadow-[0_0_12px_2px_rgba(249,115,22,0.5)]" />
+            FIND YOUR NEXT FAVORITE
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-7xl lg:text-8xl">
+            중고거래
+            <br />
+            <span className="bg-linear-to-r from-orange-500 via-orange-600 to-rose-500 bg-clip-text text-transparent">
+              사이트
+            </span>
+          </h1>
+          <p className="mx-auto mt-7 max-w-md text-base leading-7 text-slate-600 sm:text-lg lg:mx-0">
+            좋은 물건이 새로운 주인을 만나는 곳.
+            <br className="hidden sm:block" />
+            당신의 다음 발견을 시작해보세요.
+          </p>
+          <Link
+            href="/products"
+            className="group mt-9 inline-flex items-center gap-4 rounded-full bg-slate-950 py-4 pl-7 pr-5 font-semibold text-white shadow-xl shadow-slate-950/20 transition duration-200 hover:-translate-y-1 hover:bg-orange-600 hover:shadow-orange-600/25 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-600"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            상품 페이지로 이동
+            <span className="flex size-9 items-center justify-center rounded-full bg-white/15 text-lg transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </Link>
         </div>
-      </main>
-    </div>
+
+        <div
+          aria-hidden="true"
+          className="relative mx-auto flex aspect-square w-full max-w-md items-center justify-center"
+        >
+          <div className="absolute inset-[8%] rounded-full border border-orange-300/40" />
+          <div className="absolute inset-[17%] rounded-full border border-dashed border-orange-300/50" />
+          <div className="absolute inset-[24%] rounded-full bg-linear-to-br from-amber-300 via-orange-400 to-rose-500 shadow-2xl shadow-orange-500/30" />
+          <div className="absolute right-[8%] top-[13%] size-7 rounded-full bg-yellow-300 shadow-lg shadow-yellow-500/40" />
+          <div className="absolute bottom-[13%] left-[9%] size-4 rounded-full bg-rose-400 shadow-lg shadow-rose-500/40" />
+
+          <div className="absolute left-[2%] top-[23%] w-44 rotate-[-8deg] rounded-2xl border border-white/80 bg-white/85 p-4 shadow-xl shadow-orange-950/10 backdrop-blur-sm transition-transform duration-500 hover:-rotate-3 sm:left-[5%]">
+            <div className="flex items-center gap-3">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-sky-100 to-blue-200">
+                <span className="size-6 rounded-md border-2 border-blue-500/70" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-2 w-16 rounded-full bg-slate-800/80" />
+                <div className="h-1.5 w-10 rounded-full bg-slate-300" />
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-[19%] right-[0%] w-48 rotate-[7deg] rounded-2xl border border-white/80 bg-white/90 p-4 shadow-xl shadow-orange-950/10 backdrop-blur-sm transition-transform duration-500 hover:rotate-2 sm:right-[3%]">
+            <div className="flex items-center gap-3">
+              <div className="flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-emerald-100 to-lime-200">
+                <span className="size-6 rounded-full border-2 border-emerald-600/70" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-2 w-20 rounded-full bg-slate-800/80" />
+                <div className="h-1.5 w-12 rounded-full bg-slate-300" />
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute right-[16%] top-[16%] flex size-14 rotate-12 items-center justify-center rounded-2xl bg-slate-950 text-2xl text-white shadow-xl shadow-slate-950/20">
+            ✳
+          </div>
+          <div className="absolute bottom-[12%] left-[24%] flex size-12 -rotate-12 items-center justify-center rounded-full border-4 border-white bg-orange-500 text-xl text-white shadow-lg">
+            +
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
