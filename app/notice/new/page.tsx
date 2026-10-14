@@ -1,7 +1,7 @@
-export default function noticepage() {
+export default function NewNoticePage() {
   return (
     <div>
-      <h1>공지사항 목록</h1>
+      <h1>새 공지사항 작성</h1>
     </div>
   );
 }
