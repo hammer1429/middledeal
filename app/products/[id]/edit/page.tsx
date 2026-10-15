@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { connection } from "next/server"
 
@@ -11,7 +12,15 @@ type Props = {
   params: Promise<{ id: string }>
 }
 
-export default async function EditProductPage({ params }: Props) {
+export default function EditProductPage({ params }: Props) {
+  return (
+    <Suspense fallback={<EditProductLoading />}>
+      <EditProductContent params={params} />
+    </Suspense>
+  )
+}
+
+async function EditProductContent({ params }: Props) {
   const { id } = await params
 
   await connection()
@@ -129,6 +138,17 @@ export default async function EditProductPage({ params }: Props) {
           </Link>
         </form>
       </div>
+    </main>
+  )
+}
+
+function EditProductLoading() {
+  return (
+    <main className="flex-1 bg-linear-to-b from-orange-50/70 via-white to-white px-6 py-12 sm:py-16">
+      <div
+        aria-label="상품 정보를 불러오는 중"
+        className="mx-auto h-72 max-w-2xl animate-pulse rounded-3xl border border-orange-100 bg-white"
+      />
     </main>
   )
 }
