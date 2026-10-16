@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { connection } from "next/server"
-import { getProducts } from "@/lib/products"
+import { incrementProductViews } from "@/lib/products"
 import { DeleteProductButton } from "@/components/DeleteProductButton"
 
 type Props = { params: Promise<{ id: string }> }
@@ -21,9 +21,11 @@ export default function ProductDetailPage({ params }: Props) {
 async function ProductDetail({ params }: Props) {
   const { id } = await params
   await connection()
-  const product = await getProducts().then((products) =>
-    products.find((p) => p.id === id),
-  )
+  const product = await incrementProductViews(id)
+
+  if (!product) {
+    notFound()
+  }
 
   if (!product) {
     notFound()
@@ -43,6 +45,13 @@ async function ProductDetail({ params }: Props) {
       <p className="mt-3 border-b border-orange-100 pb-6 text-sm text-slate-500">
         {product.author} · {product.createdAt}
       </p>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <span className="rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
+          {product.status}
+        </span>
+
+        <span className="text-sm text-slate-500">조회수 {product.views}</span>
+      </div>
       {product.imageUrl && (
         <Image
           src={product.imageUrl}

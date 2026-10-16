@@ -118,7 +118,25 @@ export default async function EditProductPage({ params }: Props) {
               새 사진을 선택하지 않으면 기존 사진을 유지합니다. 최대 4MB
             </p>
           </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="status"
+              className="text-sm font-semibold text-slate-700"
+            >
+              거래 상태
+            </label>
 
+            <select
+              id="status"
+              name="status"
+              defaultValue={product.status}
+              className="rounded-xl border border-orange-100 bg-orange-50/30 px-4 py-3 text-sm text-slate-900"
+            >
+              <option value="판매중">판매중</option>
+              <option value="예약중">예약중</option>
+              <option value="거래완료">거래완료</option>
+            </select>
+          </div>
           <SubmitButton label="수정 저장" />
 
           <Link

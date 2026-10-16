@@ -1,6 +1,8 @@
 import { connectDB } from "./mongodb"
 import { Product as ProductModel } from "@/models/products"
 
+export type ProductStatus = "판매중" | "예약중" | "거래완료"
+
 export type Product = {
   id: string
   title: string
@@ -8,6 +10,8 @@ export type Product = {
   content: string
   imageUrl?: string
   createdAt: string
+  views: number
+  status: ProductStatus
 }
 
 type ProductDocLike = {
@@ -17,6 +21,8 @@ type ProductDocLike = {
   content: string
   imageUrl?: string
   createdAt?: Date
+  views?: number
+  status?: ProductStatus
 }
 
 function toProduct(doc: ProductDocLike): Product {
@@ -27,6 +33,8 @@ function toProduct(doc: ProductDocLike): Product {
     content: doc.content,
     ...(doc.imageUrl ? { imageUrl: doc.imageUrl } : {}),
     createdAt: doc.createdAt?.toISOString().slice(0, 10) ?? "날짜 없음",
+    views: doc.views ?? 0,
+    status: doc.status ?? "판매중",
   }
 }
 
@@ -83,7 +91,23 @@ export async function getProduct(id: string): Promise<Product | undefined> {
     return undefined
   }
 }
+export async function incrementProductViews(
+  id: string,
+): Promise<Product | undefined> {
+  await connectDB()
 
+  try {
+    const doc = await ProductModel.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { returnDocument: "after", runValidators: true },
+    ).lean()
+
+    return doc ? toProduct(doc as ProductDocLike) : undefined
+  } catch {
+    return undefined
+  }
+}
 export async function createProduct(input: {
   title: string
   author: string
@@ -102,6 +126,7 @@ export async function updateProduct(
     author: string
     content: string
     imageUrl?: string
+    status?: ProductStatus
   },
 ): Promise<Product | undefined> {
   await connectDB()

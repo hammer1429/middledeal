@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { connection } from "next/server";
-import { getProducts } from "@/lib/products";
+import { Suspense } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { connection } from "next/server"
+import { getProducts } from "@/lib/products"
 
 export default async function ProductsPage() {
   return (
@@ -24,12 +24,12 @@ export default async function ProductsPage() {
         </Suspense>
       </div>
     </main>
-  );
+  )
 }
 
 async function ProductsList() {
-  await connection();
-  const products = await getProducts();
+  await connection()
+  const products = await getProducts()
   return (
     <>
       <ul className="flex flex-col gap-3">
@@ -56,6 +56,23 @@ async function ProductsList() {
                 <p className="mt-2 text-sm text-slate-500">
                   {p.author} · {p.createdAt}
                 </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      p.status === "판매중"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : p.status === "예약중"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-slate-100 text-slate-600"
+                    }`}
+                  >
+                    {p.status}
+                  </span>
+
+                  <span className="text-sm text-slate-500">
+                    조회수 {p.views}
+                  </span>
+                </div>
               </div>
             </Link>
           </li>
@@ -69,7 +86,7 @@ async function ProductsList() {
         홈으로 돌아가기
       </Link>
     </>
-  );
+  )
 }
 
 function ProductsLoading() {
@@ -82,5 +99,5 @@ function ProductsLoading() {
         />
       ))}
     </div>
-  );
+  )
 }
