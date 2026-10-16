@@ -7,8 +7,11 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createProduct, updateProduct, deleteProduct } from "@/lib/products"
 import type { ProductStatus } from "@/lib/products"
-import { createNotice } from "@/lib/Notices"
-import type { ProductStatus } from "@/lib/products"
+import {
+  createNotice,
+  updateNotice,
+  deleteNotice,
+} from "@/lib/Notices"
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024
 
 const IMAGE_TYPES = {
@@ -118,6 +121,42 @@ export async function createNoticeAction(formData: FormData) {
   revalidatePath("/notice")
   revalidatePath("/")
   redirect(`/notice/${notice.id}`)
+}
+
+export async function updateNoticeAction(id: string, formData: FormData) {
+  const title = String(formData.get("title") ?? "").trim()
+  const author = String(formData.get("author") ?? "").trim()
+  const content = String(formData.get("content") ?? "").trim()
+
+  if (!title || !author || !content) {
+    throw new Error("제목, 작성자, 내용을 모두 입력해주세요.")
+  }
+
+  const notice = await updateNotice(id, { title, author, content })
+
+  if (!notice) {
+    throw new Error("공지사항을 찾을 수 없거나 수정에 실패했습니다.")
+  }
+
+  revalidatePath("/")
+  revalidatePath("/notice")
+  revalidatePath(`/notice/${id}`)
+
+  redirect(`/notice/${id}`)
+}
+
+export async function deleteNoticeAction(id: string, _formData: FormData) {
+  const deleted = await deleteNotice(id)
+
+  if (!deleted) {
+    throw new Error("공지사항을 찾을 수 없거나 삭제에 실패했습니다.")
+  }
+
+  revalidatePath("/")
+  revalidatePath("/notice")
+  revalidatePath(`/notice/${id}`)
+
+  redirect("/notice")
 }
 
 export async function updateProductAction(id: string, formData: FormData) {

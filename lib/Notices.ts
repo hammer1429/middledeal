@@ -75,3 +75,37 @@ export async function createNotice(input: {
   const doc = await NoticeModel.create(input);
   return toNotice(doc);
 }
+
+export async function updateNotice(
+  id: string,
+  input: {
+    title: string;
+    author: string;
+    content: string;
+  },
+): Promise<Notice | undefined> {
+  await connectDB();
+
+  try {
+    const doc = await NoticeModel.findByIdAndUpdate(
+      id,
+      { $set: input },
+      { new: true, runValidators: true },
+    ).lean();
+
+    return doc ? toNotice(doc as NoticeDocLike) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function deleteNotice(id: string): Promise<boolean> {
+  await connectDB();
+
+  try {
+    const doc = await NoticeModel.findByIdAndDelete(id).lean();
+    return Boolean(doc);
+  } catch {
+    return false;
+  }
+}

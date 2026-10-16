@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { connection } from "next/server";
 import { getNotice } from "@/lib/Notices";
+import { DeleteNoticeButton } from "@/components/DeleteNoticeButton";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -42,6 +43,16 @@ async function NoticeDetail({ params }: Props) {
       <p className="whitespace-pre-wrap py-8 leading-8 text-slate-700">
         {notice.content}
       </p>
+      <div className="mt-8 flex flex-wrap gap-3 border-t border-orange-100 pt-6">
+        <Link
+          href={`/notice/${notice.id}/edit`}
+          className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          공지사항 수정
+        </Link>
+
+        <DeleteNoticeButton noticeId={notice.id} />
+      </div>
     </article>
   );
 }
