@@ -8,6 +8,7 @@ import { redirect } from "next/navigation"
 import { createProduct, updateProduct, deleteProduct } from "@/lib/products"
 import { createNotice } from "@/lib/Notices"
 import type { ProductStatus } from "@/lib/products"
+
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024
 
 const IMAGE_TYPES = {
@@ -124,7 +125,6 @@ export async function createNoticeAction(formData: FormData) {
 }
 
 export async function updateProductAction(id: string, formData: FormData) {
-  // 1. 수정 폼에서 상품 정보 가져오기
   const title = String(formData.get("title") ?? "").trim()
   const author = String(formData.get("author") ?? "").trim()
   const content = String(formData.get("content") ?? "").trim()
@@ -135,17 +135,13 @@ export async function updateProductAction(id: string, formData: FormData) {
     throw new Error("제목, 작성자, 내용을 입력해주세요.")
   }
 
-  // 3. 거래 상태 가져오기
   const statusValue = String(formData.get("status") ?? "")
-
-  // 4. 허용된 거래 상태인지 확인
   const allowedStatuses: ProductStatus[] = ["판매중", "예약중", "거래완료"]
 
   if (!allowedStatuses.includes(statusValue as ProductStatus)) {
     throw new Error("올바른 거래 상태를 선택해주세요.")
   }
 
-  // 5. 새 사진을 선택하지 않았다면 기존 사진 유지
   let imageUrl: string | undefined
 
   if (image !== null && !(image instanceof File)) {
@@ -171,6 +167,7 @@ export async function updateProductAction(id: string, formData: FormData) {
     }
 
     const uploadDirectory = path.join(process.cwd(), "public", "uploads")
+
     const fileName = `${randomUUID()}.${imageType.extension}`
 
     await mkdir(uploadDirectory, { recursive: true })
@@ -201,7 +198,7 @@ export async function updateProductAction(id: string, formData: FormData) {
   redirect(`/products/${id}`)
 }
 
-export async function deleteProductAction(id: string) {
+export async function deleteProductAction(id: string, _formData: FormData) {
   const deleted = await deleteProduct(id)
 
   if (!deleted) {
