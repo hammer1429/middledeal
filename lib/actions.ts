@@ -6,9 +6,9 @@ import path from "node:path"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { createProduct, updateProduct, deleteProduct } from "@/lib/products"
+import type { ProductStatus } from "@/lib/products"
 import { createNotice } from "@/lib/Notices"
 import type { ProductStatus } from "@/lib/products"
-
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024
 
 const IMAGE_TYPES = {
@@ -63,8 +63,6 @@ export async function createProductAction(formData: FormData) {
   const image = formData.get("image")
 
   if (!title || !author || !content) {
-    // 실습 단계의 아주 단순한 검증입니다.
-    // 실제 서비스라면 에러 상태를 돌려주고 폼에 메시지를 보여줘야 합니다.
     throw new Error("제목, 작성자, 내용을 모두 입력해주세요.")
   }
 
@@ -113,8 +111,6 @@ export async function createNoticeAction(formData: FormData) {
   const content = String(formData.get("content") ?? "").trim()
 
   if (!title || !author || !content) {
-    // 실습 단계의 아주 단순한 검증입니다.
-    // 실제 서비스라면 에러 상태를 돌려주고 폼에 메시지를 보여줘야 합니다.
     throw new Error("제목, 작성자, 내용을 모두 입력해주세요.")
   }
 
@@ -130,7 +126,6 @@ export async function updateProductAction(id: string, formData: FormData) {
   const content = String(formData.get("content") ?? "").trim()
   const image = formData.get("image")
 
-  // 2. 필수 입력값 검사
   if (!title || !author || !content) {
     throw new Error("제목, 작성자, 내용을 입력해주세요.")
   }
@@ -148,7 +143,6 @@ export async function updateProductAction(id: string, formData: FormData) {
     throw new Error("사진 파일을 확인할 수 없습니다.")
   }
 
-  // 6. 새 사진을 선택한 경우 검사하고 저장
   if (image instanceof File && image.size > 0) {
     if (image.size > MAX_IMAGE_SIZE) {
       throw new Error("사진 파일은 4MB 이하만 등록할 수 있습니다.")
